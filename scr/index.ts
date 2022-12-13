@@ -99,16 +99,13 @@ app.post('/hometask_01/api/videos', (req, res) => {
         });
     }
     for(let i = 0; i < availableResolutions.length; i++){
-        if (checkAvailability(resolutions, availableResolutions[i])) {
-        }
-        else {
+        if (!(checkAvailability(resolutions, availableResolutions[i]))) {
             res.status(400).send({
                 errorsMessages: [{
                     "message": "Incorrect Resolutions Format",
                     "field": "availableResolutions"
                 }]
             })
-            return;
         }
     }
 
