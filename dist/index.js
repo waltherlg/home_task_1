@@ -1,5 +1,4 @@
 "use strict";
-//https://samurai.it-incubator.ru/pc/video-content/watch/62b4cc62669e0c88275932d8
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -48,11 +47,12 @@ let videos = [
     }
 ];
 const resolutions = ["P144", "P240", "P360", "P480", "P720", "P1080", "P1440", "P2160"];
-// GET /hometask_01/api/videos          Returns All videos
-app.get('/hometask_01/api/videos', (req, res) => {
+// GET Returns All videos
+app.get('/videos', (req, res) => {
     res.send(videos);
 });
-app.post('/hometask_01/api/videos', (req, res) => {
+// POST add video
+app.post('/videos', (req, res) => {
     let title = req.body.title;
     if (!title || typeof title !== 'string' || title.length > 40)
         res.status(400).send({
@@ -83,16 +83,13 @@ app.post('/hometask_01/api/videos', (req, res) => {
         });
     }
     for (let i = 0; i < availableResolutions.length; i++) {
-        if (checkAvailability(resolutions, availableResolutions[i])) {
-        }
-        else {
+        if (!(checkAvailability(resolutions, availableResolutions[i]))) {
             res.status(400).send({
                 errorsMessages: [{
-                        "message": "Incorrect Resolutions S",
+                        "message": "Incorrect Resolutions Format",
                         "field": "availableResolutions"
                     }]
             });
-            return;
         }
     }
     let currentDate = new Date();
@@ -113,7 +110,8 @@ app.post('/hometask_01/api/videos', (req, res) => {
     videos.push(newVideo);
     res.status(201).send(newVideo);
 });
-app.get('/hometask_01/api/videos/:id', (req, res) => {
+// GET returns video by id
+app.get('/videos/:id', (req, res) => {
     let video = videos.find(v => v.id === +req.params.id);
     if (video) {
         res.send(video);
@@ -122,7 +120,8 @@ app.get('/hometask_01/api/videos/:id', (req, res) => {
         res.send(404);
     }
 });
-app.delete('/hometask_01/api/videos/:id', (req, res) => {
+// DELETE delete video by id
+app.delete('/videos/:id', (req, res) => {
     for (let i = 0; i < videos.length; i++) {
         if (videos[i].id === +req.params.id)
             videos.splice(i, 1);
@@ -131,7 +130,8 @@ app.delete('/hometask_01/api/videos/:id', (req, res) => {
     }
     res.send(404);
 });
-app.put('/hometask_01/api/videos/:id', (req, res) => {
+// PUT update video by id
+app.put('/videos/:id', (req, res) => {
     let video = videos.find(v => v.id === +req.params.id);
     if (video) {
     }
