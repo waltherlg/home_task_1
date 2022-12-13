@@ -123,12 +123,15 @@ app.get('/videos/:id', (req, res) => {
 // DELETE delete video by id
 app.delete('/videos/:id', (req, res) => {
     for (let i = 0; i < videos.length; i++) {
-        if (videos[i].id === +req.params.id)
+        if (videos[i].id === +req.params.id) {
             videos.splice(i, 1);
-        res.send(204);
-        return;
+            res.send(204);
+            return;
+        }
+        else {
+            res.send(404);
+        }
     }
-    res.send(404);
 });
 // DELETE delete all data
 app.delete('/testing/all-data', (req, res) => {
@@ -218,7 +221,7 @@ app.put('/videos/:id', (req, res) => {
     video.minAgeRestriction = minAgeRestriction;
     video.publicationDate = publicationDate;
     video.availableResolutions = availableResolutions;
-    res.send(video);
+    res.status(204).send(video);
 });
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);

@@ -144,12 +144,17 @@ app.get('/videos/:id', (req, res) => {
 // DELETE delete video by id
 app.delete('/videos/:id', (req, res) => {
     for (let i = 0; i < videos.length; i++){
-        if (videos[i].id === +req.params.id)
+        if (videos[i].id === +req.params.id){
             videos.splice(i, 1);
             res.send(204);
             return;
+        }
+        else {
+            res.send(404);
+        }
+
     }
-    res.send(404);
+
 
 })
 
@@ -244,7 +249,7 @@ app.put('/videos/:id', (req, res) => {
     video.minAgeRestriction = minAgeRestriction;
     video.publicationDate = publicationDate;
     video.availableResolutions = availableResolutions;
-    res.send(video);
+    res.status(204).send(video);
 })
 
 
