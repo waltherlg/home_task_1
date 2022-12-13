@@ -131,6 +131,7 @@ app.delete('/testing/all-data', (req, res) => {
 });
 // PUT update video by id
 app.put('/videos/:id', (req, res) => {
+    let errorsMessages = [];
     let video = videos.find(v => v.id === +req.params.id);
     if (video) {
     }
@@ -138,73 +139,49 @@ app.put('/videos/:id', (req, res) => {
         res.send(404);
     }
     let title = req.body.title;
-    if (!title || typeof title !== 'string' || title.length > 40)
-        res.status(400).send({
-            errorsMessages: [{
-                    "message": "Incorrect title",
-                    "field": "title"
-                }]
-        });
+    if (!title || typeof title !== 'string' || title.length > 40) {
+        errorsMessages.push({ "message": "Incorrect title",
+            "field": "title" });
+    }
     let author = req.body.author;
-    if (!author || typeof author !== 'string' || author.length > 40)
-        res.status(400).send({
-            errorsMessages: [{
-                    "message": "Incorrect author",
-                    "field": "author"
-                }]
-        });
+    if (!author || typeof author !== 'string' || author.length > 40) {
+        errorsMessages.push({ "message": "Incorrect author",
+            "field": "author" });
+    }
     let canBeDownloaded = req.body.canBeDownloaded;
     if (typeof req.body.canBeDownloaded !== "boolean") {
-        res.status(400).send({
-            errorsMessages: [{
-                    "message": "Is not boolean",
-                    "field": "canBeDownloaded"
-                }]
-        });
+        errorsMessages.push({ "message": "Incorrect canBeDownloaded",
+            "field": "canBeDownloaded" });
     }
     let minAgeRestriction = req.body.minAgeRestriction;
     if (!minAgeRestriction || typeof req.body.minAgeRestriction !== "number" || minAgeRestriction < 1 || minAgeRestriction > 18) {
-        res.status(400).send({
-            errorsMessages: [{
-                    "message": "Wrong Age",
-                    "field": "minAgeRestriction"
-                }]
-        });
+        errorsMessages.push({ "message": "Wrong Age",
+            "field": "minAgeRestriction" });
     }
     let publicationDate = req.body.publicationDate;
     if (!publicationDate || typeof req.body.publicationDate !== "string") {
-        res.status(400).send({
-            errorsMessages: [{
-                    "message": "wrong Date",
-                    "field": "publicationDate"
-                }]
-        });
+        errorsMessages.push({ "message": "wrong Date",
+            "field": "publicationDate" });
     }
     let availableResolutions = req.body.availableResolutions;
-    if (!availableResolutions || !Array.isArray(availableResolutions))
-        res.status(400).send({
-            errorsMessages: [{
-                    "message": "Incorrect Resolutions",
-                    "field": "availableResolutions"
-                }]
-        });
+    if (!availableResolutions || !Array.isArray(availableResolutions)) {
+        errorsMessages.push({ "message": "Incorrect Resolutions",
+            "field": "availableResolutions" });
+    }
     function checkAvailability(arr, val) {
         return arr.some(function (arrVal) {
             return val === arrVal;
         });
     }
     for (let i = 0; i < availableResolutions.length; i++) {
-        if (checkAvailability(resolutions, availableResolutions[i])) {
-        }
-        else {
-            res.status(400).send({
-                errorsMessages: [{
-                        "message": "Incorrect Resolutions S",
-                        "field": "availableResolutions"
-                    }]
-            });
+        if (!(checkAvailability(resolutions, availableResolutions[i]))) {
+            errorsMessages.push({ "message": "Incorrect Resolutions S",
+                "field": "availableResolutions" });
             return;
         }
+    }
+    if (errorsMessages.length > 0) {
+        res.status(400).send(errorsMessages);
     }
     video.title = title;
     video.author = author;
@@ -212,7 +189,7 @@ app.put('/videos/:id', (req, res) => {
     video.minAgeRestriction = minAgeRestriction;
     video.publicationDate = publicationDate;
     video.availableResolutions = availableResolutions;
-    res.status(204).send(video);
+    res.send(video);
 });
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
