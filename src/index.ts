@@ -68,30 +68,27 @@ app.get('/videos', (req, res) => {
 
 // POST add video
 app.post('/videos', (req, res) => {
+    let errorsMessages: Array<object> = []
     let title = req.body.title;
-    if (!title || typeof title !== 'string' || title.length>40)
-        res.status(400).send({
-            errorsMessages: [{
-                "message": "Incorrect title",
-                "field": "title"
-            }]
-        })
+    if (!title || typeof title !== 'string' || title.length>40) {
+        errorsMessages.push (
+            {"message": "Incorrect title",
+            "field": "title"} )
+        }
+
     let author = req.body.author;
-    if (!author || typeof author !== 'string' || author.length>20)
-        res.status(400).send({
-            errorsMessages: [{
-                "message": "Incorrect author",
-                "field": "author"
-            }]
-        })
+    if (!author || typeof author !== 'string' || author.length>20) {
+        errorsMessages.push (
+            {"message": "Incorrect author",
+                "field": "author"} )
+    }
+
     let availableResolutions = req.body.availableResolutions;
-    if (!availableResolutions || !Array.isArray(availableResolutions))
-        res.status(400).send({
-            errorsMessages: [{
-                "message": "Incorrect Resolutions",
-                "field": "availableResolutions"
-            }]
-        })
+    if (!availableResolutions || !Array.isArray(availableResolutions)){
+        errorsMessages.push (
+            {"message": "Incorrect Resolutions",
+                "field": "Incorrect Resolutions"} )
+    }
 
     function checkAvailability(arr: any, val: any) { // попробовать через эвери
         return arr.some(function(arrVal:any) {
@@ -100,15 +97,15 @@ app.post('/videos', (req, res) => {
     }
     for(let i = 0; i < availableResolutions.length; i++){
         if (!(checkAvailability(resolutions, availableResolutions[i]))) {
-            res.status(400).send({
-                errorsMessages: [{
-                    "message": "Incorrect Resolutions Format",
-                    "field": "availableResolutions"
-                }]
-            })
+            errorsMessages.push (
+                {"message": "Incorrect Resolutions Format",
+                    "field": "Incorrect Resolutions"} )
+
         }
     }
-
+    if (errorsMessages.length > 0){
+        res.status(400).send(errorsMessages)
+    }
     let currentDate = new Date();
     const day = currentDate.getDate()
     const dateInMs = currentDate.setDate(day)
