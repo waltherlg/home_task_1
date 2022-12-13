@@ -3,14 +3,14 @@
   "name": "simple_express",
   "builds": [
     {
-      "src": "index.ts",
+      "src": "src/index.ts",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "index.ts"
+      "dest": "src/index.ts"
     }
   ]
 }
