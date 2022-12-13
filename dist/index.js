@@ -67,7 +67,7 @@ app.post('/videos', (req, res) => {
     let availableResolutions = req.body.availableResolutions;
     if (!availableResolutions || !Array.isArray(availableResolutions)) {
         errorsMessages.push({ "message": "Incorrect Resolutions",
-            "field": "Incorrect Resolutions" });
+            "field": "availableResolutions" });
     }
     function checkAvailability(arr, val) {
         return arr.some(function (arrVal) {
@@ -77,7 +77,7 @@ app.post('/videos', (req, res) => {
     for (let i = 0; i < availableResolutions.length; i++) {
         if (!(checkAvailability(resolutions, availableResolutions[i]))) {
             errorsMessages.push({ "message": "Incorrect Resolutions Format",
-                "field": "Incorrect Resolutions" });
+                "field": "availableResolutions" });
         }
     }
     if (errorsMessages.length > 0) {
@@ -144,7 +144,7 @@ app.put('/videos/:id', (req, res) => {
             "field": "title" });
     }
     let author = req.body.author;
-    if (!author || typeof author !== 'string' || author.length > 40) {
+    if (!author || typeof author !== 'string' || author.length > 20) {
         errorsMessages.push({ "message": "Incorrect author",
             "field": "author" });
     }
