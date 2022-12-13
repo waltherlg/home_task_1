@@ -103,7 +103,7 @@ app.post('/videos', (req, res) => {
         }
     }
     if (errorsMessages.length > 0){
-        res.status(400).send(errorsMessages)
+        res.status(400).send({errorsMessages})
     }
     let currentDate = new Date();
     const day = currentDate.getDate()
@@ -223,7 +223,8 @@ app.put('/videos/:id', (req, res) => {
         }
     }
     if (errorsMessages.length > 0){
-        res.status(400).send(errorsMessages);
+        // let errorsField = ("errorsMessages: " + [errorsMessages]);
+        res.status(400).send({errorsMessages});
     }
     video.title = title;
     video.author = author;
