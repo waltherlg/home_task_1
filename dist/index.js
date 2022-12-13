@@ -8,44 +8,7 @@ const bodyParser = require('body-parser');
 const app = (0, express_1.default)();
 const port = 3000;
 app.use(bodyParser.json());
-let videos = [
-    {
-        "id": 1,
-        "title": "lake",
-        "author": "Bob",
-        "canBeDownloaded": true,
-        "minAgeRestriction": null,
-        "createdAt": "2022-12-10T10:02:00.784Z",
-        "publicationDate": "2022-12-10T10:02:00.784Z",
-        "availableResolutions": [
-            "P144"
-        ]
-    },
-    {
-        "id": 2,
-        "title": "Strike",
-        "author": "Sally",
-        "canBeDownloaded": true,
-        "minAgeRestriction": null,
-        "createdAt": "2022-13-10T10:02:00.784Z",
-        "publicationDate": "2022-12-10T10:02:00.784Z",
-        "availableResolutions": [
-            "P1440"
-        ]
-    },
-    {
-        "id": 3,
-        "title": "Home",
-        "author": "Ron",
-        "canBeDownloaded": true,
-        "minAgeRestriction": null,
-        "createdAt": "2022-14-10T10:02:00.784Z",
-        "publicationDate": "2022-12-10T10:02:00.784Z",
-        "availableResolutions": [
-            "P720"
-        ]
-    }
-];
+let videos = [];
 const resolutions = ["P144", "P240", "P360", "P480", "P720", "P1080", "P1440", "P2160"];
 // GET Returns All videos
 app.get('/videos', (req, res) => {
