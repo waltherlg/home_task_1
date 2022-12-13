@@ -1,0 +1,220 @@
+"use strict";
+//https://samurai.it-incubator.ru/pc/video-content/watch/62b4cc62669e0c88275932d8
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const bodyParser = require('body-parser');
+const app = (0, express_1.default)();
+const port = 3000;
+app.use(bodyParser.json());
+let videos = [
+    {
+        "id": 1,
+        "title": "lake",
+        "author": "Bob",
+        "canBeDownloaded": true,
+        "minAgeRestriction": null,
+        "createdAt": "2022-12-10T10:02:00.784Z",
+        "publicationDate": "2022-12-10T10:02:00.784Z",
+        "availableResolutions": [
+            "P144"
+        ]
+    },
+    {
+        "id": 2,
+        "title": "Strike",
+        "author": "Sally",
+        "canBeDownloaded": true,
+        "minAgeRestriction": null,
+        "createdAt": "2022-13-10T10:02:00.784Z",
+        "publicationDate": "2022-12-10T10:02:00.784Z",
+        "availableResolutions": [
+            "P1440"
+        ]
+    },
+    {
+        "id": 3,
+        "title": "Home",
+        "author": "Ron",
+        "canBeDownloaded": true,
+        "minAgeRestriction": null,
+        "createdAt": "2022-14-10T10:02:00.784Z",
+        "publicationDate": "2022-12-10T10:02:00.784Z",
+        "availableResolutions": [
+            "P720"
+        ]
+    }
+];
+const resolutions = ["P144", "P240", "P360", "P480", "P720", "P1080", "P1440", "P2160"];
+// GET /hometask_01/api/videos          Returns All videos
+app.get('/hometask_01/api/videos', (req, res) => {
+    res.send(videos);
+});
+app.post('/hometask_01/api/videos', (req, res) => {
+    let title = req.body.title;
+    if (!title || typeof title !== 'string' || title.length > 40)
+        res.status(400).send({
+            errorsMessages: [{
+                    "message": "Incorrect title",
+                    "field": "title"
+                }]
+        });
+    let author = req.body.author;
+    if (!author || typeof author !== 'string' || author.length > 20)
+        res.status(400).send({
+            errorsMessages: [{
+                    "message": "Incorrect author",
+                    "field": "author"
+                }]
+        });
+    let availableResolutions = req.body.availableResolutions;
+    if (!availableResolutions || !Array.isArray(availableResolutions))
+        res.status(400).send({
+            errorsMessages: [{
+                    "message": "Incorrect Resolutions",
+                    "field": "availableResolutions"
+                }]
+        });
+    function checkAvailability(arr, val) {
+        return arr.some(function (arrVal) {
+            return val === arrVal;
+        });
+    }
+    for (let i = 0; i < availableResolutions.length; i++) {
+        if (checkAvailability(resolutions, availableResolutions[i])) {
+        }
+        else {
+            res.status(400).send({
+                errorsMessages: [{
+                        "message": "Incorrect Resolutions S",
+                        "field": "availableResolutions"
+                    }]
+            });
+            return;
+        }
+    }
+    let currentDate = new Date();
+    const day = currentDate.getDate();
+    const dateInMs = currentDate.setDate(day);
+    const date = new Date(dateInMs);
+    let currentDatePlusOne = new Date(currentDate.setDate(currentDate.getDate() + 1));
+    let newVideo = {
+        id: +(new Date()),
+        title: title,
+        author: author,
+        canBeDownloaded: true,
+        minAgeRestriction: null,
+        createdAt: date.toISOString(),
+        publicationDate: currentDatePlusOne.toISOString(),
+        availableResolutions: availableResolutions
+    };
+    videos.push(newVideo);
+    res.status(201).send(newVideo);
+});
+app.get('/hometask_01/api/videos/:id', (req, res) => {
+    let video = videos.find(v => v.id === +req.params.id);
+    if (video) {
+        res.send(video);
+    }
+    else {
+        res.send(404);
+    }
+});
+app.delete('/hometask_01/api/videos/:id', (req, res) => {
+    for (let i = 0; i < videos.length; i++) {
+        if (videos[i].id === +req.params.id)
+            videos.splice(i, 1);
+        res.send(204);
+        return;
+    }
+    res.send(404);
+});
+app.put('/hometask_01/api/videos/:id', (req, res) => {
+    let video = videos.find(v => v.id === +req.params.id);
+    if (video) {
+    }
+    else {
+        res.send(404);
+    }
+    let title = req.body.title;
+    if (!title || typeof title !== 'string' || title.length > 40)
+        res.status(400).send({
+            errorsMessages: [{
+                    "message": "Incorrect title",
+                    "field": "title"
+                }]
+        });
+    let author = req.body.author;
+    if (!author || typeof author !== 'string' || author.length > 40)
+        res.status(400).send({
+            errorsMessages: [{
+                    "message": "Incorrect author",
+                    "field": "author"
+                }]
+        });
+    let canBeDownloaded = req.body.canBeDownloaded;
+    if (typeof req.body.canBeDownloaded !== "boolean") {
+        res.status(400).send({
+            errorsMessages: [{
+                    "message": "Is not boolean",
+                    "field": "canBeDownloaded"
+                }]
+        });
+    }
+    let minAgeRestriction = req.body.minAgeRestriction;
+    if (!minAgeRestriction || typeof req.body.minAgeRestriction !== "number" || minAgeRestriction < 1 || minAgeRestriction > 18) {
+        res.status(400).send({
+            errorsMessages: [{
+                    "message": "Wrong Age",
+                    "field": "minAgeRestriction"
+                }]
+        });
+    }
+    let publicationDate = req.body.publicationDate;
+    if (!publicationDate || typeof req.body.publicationDate !== "string") {
+        res.status(400).send({
+            errorsMessages: [{
+                    "message": "wrong Date",
+                    "field": "publicationDate"
+                }]
+        });
+    }
+    let availableResolutions = req.body.availableResolutions;
+    if (!availableResolutions || !Array.isArray(availableResolutions))
+        res.status(400).send({
+            errorsMessages: [{
+                    "message": "Incorrect Resolutions",
+                    "field": "availableResolutions"
+                }]
+        });
+    function checkAvailability(arr, val) {
+        return arr.some(function (arrVal) {
+            return val === arrVal;
+        });
+    }
+    for (let i = 0; i < availableResolutions.length; i++) {
+        if (checkAvailability(resolutions, availableResolutions[i])) {
+        }
+        else {
+            res.status(400).send({
+                errorsMessages: [{
+                        "message": "Incorrect Resolutions S",
+                        "field": "availableResolutions"
+                    }]
+            });
+            return;
+        }
+    }
+    video.title = title;
+    video.author = author;
+    video.canBeDownloaded = canBeDownloaded;
+    video.minAgeRestriction = minAgeRestriction;
+    video.publicationDate = publicationDate;
+    video.availableResolutions = availableResolutions;
+    res.send(video);
+});
+app.listen(port, () => {
+    console.log(`Example app listening on port ${port}`);
+});
