@@ -101,7 +101,7 @@ app.post('/videos', (req, res) => {
         id: +(new Date()),
         title: title,
         author: author,
-        canBeDownloaded: true,
+        canBeDownloaded: false,
         minAgeRestriction: null,
         createdAt: date.toISOString(),
         publicationDate: currentDatePlusOne.toISOString(),
@@ -129,6 +129,11 @@ app.delete('/videos/:id', (req, res) => {
         return;
     }
     res.send(404);
+});
+// DELETE delete all data
+app.delete('/testing/all-data', (req, res) => {
+    videos.splice(0);
+    res.send(204);
 });
 // PUT update video by id
 app.put('/videos/:id', (req, res) => {

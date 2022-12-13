@@ -154,7 +154,7 @@ app.delete('/videos/:id', (req, res) => {
 })
 
 // DELETE delete all data
-app.delete('testing/all-data', (req, res) => {
+app.delete('/testing/all-data', (req, res) => {
     videos.splice(0);
     res.send(204);
 })
