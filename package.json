@@ -1,7 +1,7 @@
 {
   "name": "simple_express",
   "version": "1.0.0",
-  "main": "scr/index.ts",
+  "main": "src/index.ts",
   "license": "MIT",
   "scripts": {
     "watch": "tsc -w",
