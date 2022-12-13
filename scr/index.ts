@@ -104,7 +104,7 @@ app.post('/hometask_01/api/videos', (req, res) => {
         else {
             res.status(400).send({
                 errorsMessages: [{
-                    "message": "Incorrect Resolutions S",
+                    "message": "Incorrect Resolutions Format",
                     "field": "availableResolutions"
                 }]
             })
@@ -120,7 +120,6 @@ app.post('/hometask_01/api/videos', (req, res) => {
     let currentDatePlusOne =new Date(currentDate.setDate(currentDate.getDate() + 1));
 
     let newVideo = {
-
         id: +(new Date()),
         title: title,
         author: author,
