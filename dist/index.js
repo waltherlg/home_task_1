@@ -153,7 +153,7 @@ app.put('/videos/:id', (req, res) => {
     video.minAgeRestriction = minAgeRestriction;
     video.publicationDate = publicationDate;
     video.availableResolutions = availableResolutions;
-    res.send(video);
+    res.status(204).send(video);
 });
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
